@@ -1,0 +1,3 @@
+Fake sensor app used to send data to the dashboard/node-red or other part of the predictable project.
+
+Use the same data structure as a real sensor.
