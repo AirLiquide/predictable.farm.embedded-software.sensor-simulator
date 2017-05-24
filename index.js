@@ -2,10 +2,10 @@
  * Created by admin on 27/02/2017.
  */
 //var socket = require('socket.io-client')('http://192.168.1.191:3000/',{ query: 'role=sensor&sensorId=1'});
-//var socket = require('socket.io-client')('http://52.59.94.92:3000/',{ query: 'role=sensor&sensorId=42'});
-//var socket = require('socket.io-client')('http://52.58.113.84:3000/',{ query: 'role=sensor&sensorId=42'});
-var socket = require('socket.io-client')('http://localhost:3000/',{ query: 'role=sensor&sensorId=1'});
-//var socket = require('socket.io-client')('http://35.158.33.67:3000/',{ query: 'farmId=farm1'});
+//var socket = require('socket.io-client')('http://52.59.94.92:3000/',{ query: 'role=sensor&sensorId=42'}); //test recette
+//var socket = require('socket.io-client')('http://52.58.113.84:3000/',{ query: 'role=sensor&sensorId=42'}); //test capteur
+var socket = require('socket.io-client')('http://localhost:3000/',{ query: 'role=sensor&sensorId=1'}); //localtest
+//var socket = require('socket.io-client')('http://35.158.33.67:3000/',{ query: 'farmId=farm1'}); // bridge
 var SocketActions = require('./SocketActions');
 
 var i = 0;
