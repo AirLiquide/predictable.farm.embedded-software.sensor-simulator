@@ -4,7 +4,15 @@
 //var socket = require('socket.io-client')('http://192.168.1.191:3000/',{ query: 'role=sensor&sensorId=1'});
 //var socket = require('socket.io-client')('http://52.59.94.92:3000/',{ query: 'role=sensor&sensorId=42'}); //test recette
 //var socket = require('socket.io-client')('http://52.58.113.84:3000/',{ query: 'role=sensor&sensorId=42'}); //test capteur
-var socket = require('socket.io-client')('http://localhost:3000/',{ query: 'role=sensor&sensorId=1'}); //localtest
+var socket = require('socket.io-client')('http://localhost:4003/',{ query: 'role=sensor&sensorId=1'}); //localtest
+//var socket = require('socket.io-client')('http://35.158.33.67:4003/',{ query:'role=sensor&sensorId=1'}); //localtest
+//var socket = require('socket.io-client')('http://ecf-berlin-socket.predictable.farm/',{ path:'/socket.io',query:'role=sensor&sensorId=1'}); //localtest
+/*var socket = require('socket.io-client')('http://playground.predictable.farm/',{
+    path:'/socket/socket.io',
+    query: 'role=sensor&sensorId=1'}); //test berlin*/
+/*var socket = require('socket.io-client')('http://ecf-berlin.predictable.farm',{
+    path: '/socket/socket.io',
+    query: 'role=sensor&sensorId=1'}); //test berlin*/
 //var socket = require('socket.io-client')('http://35.158.33.67:3000/',{ query: 'farmId=farm1'}); // bridge
 var SocketActions = require('./SocketActions');
 
@@ -13,11 +21,12 @@ var i = 0;
 var types =[
     'air_pressure',
     'air_co2',
+    'air_co',
     'air_temperature',
     'air_humidity',
     'light_lux',
     'light_par',
-    'light_dli',
+    //'light_dli',
     'light_uv',
     'water_temperature',
     'water_ph',
@@ -29,6 +38,11 @@ var types =[
 
 var relaystate = 0;
 
+socket.on('connect_error', function(e) {
+    //console.log("error");
+    //console.log(e)
+});
+
 socket.on('connect', function(){
     console.log("TEST : connected to server");
     function sendData(){
@@ -38,14 +52,14 @@ socket.on('connect', function(){
             'device_id': '1',
             'sensor_type': types[0],
             'sensor_id': '1',
-            'sensor_value': getRandomInt(0,100)
+            'sensor_value': '10.1'//getRandomInt(0,100)
         };
         value = getRandomInt(0,100).toString();
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': types[0],
             'sensor_id': '1',
-            'sensor_value': value
+            'sensor_value': '10.1'
         }));
         value = getRandomInt(0,100).toString();
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
@@ -79,6 +93,13 @@ socket.on('connect', function(){
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': types[5],
+            'sensor_id': '1',
+            'sensor_value': value
+        }));
+        value = getRandomInt(0,100).toString();
+        socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
+            'device_id': '1',
+            'sensor_type': types[6],
             'sensor_id': '1',
             'sensor_value': value
         }));
@@ -124,18 +145,18 @@ socket.on('connect', function(){
             'sensor_id': '1',
             'sensor_value': value
         }));
-        value = getRandomInt(0,100).toString();
+        /*value = getRandomInt(0,100).toString();
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': types[13],
             'sensor_id': '1',
             'sensor_value': value
-        }));
+        }));*/
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay1',
             'sensor_id': '1',
-            'sensor_value': '0'
+            'sensor_value': relaystate.toString()
         }));
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
@@ -157,7 +178,7 @@ socket.on('connect', function(){
         }));
         console.log(i);
         i = i+1;
-        if (i<500000)
+        if (i<5000000)
             setTimeout(sendData,500)
     }
     setTimeout(sendData,1);
