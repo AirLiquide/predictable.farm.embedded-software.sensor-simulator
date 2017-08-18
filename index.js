@@ -17,6 +17,10 @@ var socket = require('socket.io-client')('http://localhost:4003/',{ query: 'role
 var SocketActions = require('./SocketActions');
 
 var i = 0;
+var mode1 = '0';
+var mode2 = '0';
+var mode3 = '0';
+var mode4 = '0';
 
 var types =[
     'air_pressure',
@@ -152,34 +156,40 @@ socket.on('connect', function(){
             'sensor_id': '1',
             'sensor_value': value
         }));*/
+
+
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay1',
             'sensor_id': '1',
-            'sensor_value': relaystate.toString()
+            'sensor_value': relaystate.toString(),
+            'sensor_mode':mode1
         }));
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay2',
             'sensor_id': '1',
-            'sensor_value': "1"
+            'sensor_value': "1",
+            'sensor_mode':mode2
         }));
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay3',
             'sensor_id': '1',
-            'sensor_value': "0"
+            'sensor_value': "0",
+            'sensor_mode':mode3
         }));
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay4',
             'sensor_id': '1',
-            'sensor_value': "1"
+            'sensor_value': "1",
+            'sensor_mode':mode4
         }));
         console.log(i);
         i = i+1;
         if (i<5000000)
-            setTimeout(sendData,500)
+            setTimeout(sendData,4000)
     }
     setTimeout(sendData,1);
 });
@@ -194,8 +204,29 @@ socket.on('error', function(error){
 });
 
 socket.on('sensor-receive', function(data){
-    console.log(data);
     relaystate = 1-relaystate;
+    var data = JSON.parse(JSON.parse(data));
+    if (data.sensor_type == "relay1"){
+        var v = Number.parseInt(mode1);
+        mode1 = (1 - v).toString();
+        console.log("SWITCHED MODE1 :", mode1)
+    }
+    if (data.sensor_type == 'relay2'){
+        var v = Number.parseInt(mode2);
+        mode2 = (1 - v).toString();
+        console.log("SWITCHED MODE2 :", mode2)
+    }
+    if (data.sensor_type == 'relay3'){
+        var v = Number.parseInt(mode3);
+        mode3 = (1 - v).toString();
+        console.log("SWITCHED MODE3 :", mode3)
+    }
+    if (data.sensor_type == 'relay4'){
+        var v = Number.parseInt(mode4);
+        mode4 = (1 - v).toString();
+        console.log("SWITCHED MODE4 :", mode4)
+
+    }
 });
 
 function getRandomInt(min, max) {
