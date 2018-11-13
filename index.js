@@ -1,19 +1,37 @@
-/**
- * Created by admin on 27/02/2017.
- */
-//var socket = require('socket.io-client')('http://192.168.1.191:3000/',{ query: 'role=sensor&sensorId=1'});
-//var socket = require('socket.io-client')('http://52.59.94.92:3000/',{ query: 'role=sensor&sensorId=42'}); //test recette
-//var socket = require('socket.io-client')('http://52.58.113.84:3000/',{ query: 'role=sensor&sensorId=42'}); //test capteur
+/*
+  Copyright (C) Air Liquide S.A,  2017-2018
+  Author: Sébastien Lalaurette, La Factory, Creative Foundry
+  This file is part of Predictable Farm project.
+
+  The MIT License (MIT)
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+   
+  See the LICENSE.txt file in this repository for more information.
+*/
+
+//var socket = require('socket.io-client')('http://192.168.1.1:3000/',{ query: 'role=sensor&sensorId=1'});
+//var socket = require('socket.io-client')('http://11.22.33.44:3000/',{ query: 'role=sensor&sensorId=42'}); //test capteur
+//var socket = require('socket.io-client')('http://my.specific.domaine.name/',{ path:'/socket.io',query:'role=sensor&sensorId=1'}); //localtest
+//var socket = require('socket.io-client')('http://11.22.33.44:3000/',{ query: 'farmId=farm1'}); // bridge
 var socket = require('socket.io-client')('http://localhost:4003/',{ query: 'role=sensor&sensorId=1'}); //localtest
-//var socket = require('socket.io-client')('http://35.158.33.67:4003/',{ query:'role=sensor&sensorId=1'}); //localtest
-//var socket = require('socket.io-client')('http://ecf-berlin-socket.predictable.farm/',{ path:'/socket.io',query:'role=sensor&sensorId=1'}); //localtest
-/*var socket = require('socket.io-client')('http://playground.predictable.farm/',{
-    path:'/socket/socket.io',
-    query: 'role=sensor&sensorId=1'}); //test berlin*/
-/*var socket = require('socket.io-client')('http://ecf-berlin.predictable.farm',{
-    path: '/socket/socket.io',
-    query: 'role=sensor&sensorId=1'}); //test berlin*/
-//var socket = require('socket.io-client')('http://35.158.33.67:3000/',{ query: 'farmId=farm1'}); // bridge
+
 var SocketActions = require('./SocketActions');
 
 var i = 0;
@@ -43,8 +61,8 @@ var types =[
 var relaystate = 0;
 
 socket.on('connect_error', function(e) {
-    //console.log("error");
-    //console.log(e)
+    console.log("Connect error");
+    // console.log(e)
 });
 
 socket.on('connect', function(){
@@ -149,15 +167,6 @@ socket.on('connect', function(){
             'sensor_id': '1',
             'sensor_value': value
         }));
-        /*value = getRandomInt(0,100).toString();
-        socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
-            'device_id': '1',
-            'sensor_type': types[13],
-            'sensor_id': '1',
-            'sensor_value': value
-        }));*/
-
-
         socket.emit(SocketActions.SENSOR_EMIT,JSON.stringify({
             'device_id': '1',
             'sensor_type': 'relay1',
@@ -187,14 +196,15 @@ socket.on('connect', function(){
             'sensor_mode':mode4
         }));
         console.log(i);
-        i = i+1;
-        if (i<5000000)
+        i = i + 1;
+        if (i < 5000000) {
             setTimeout(sendData,4000)
+        }
     }
-    setTimeout(sendData,1);
+    setTimeout(sendData, 1);
 });
-socket.on('event', function(data){
 
+socket.on('event', function(data){
 });
 socket.on('disconnect', function(){
     console.log("disconnected");
@@ -225,15 +235,9 @@ socket.on('sensor-receive', function(data){
         var v = Number.parseInt(mode4);
         mode4 = (1 - v).toString();
         console.log("SWITCHED MODE4 :", mode4)
-
     }
 });
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-
-
-
-
